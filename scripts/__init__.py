@@ -2,11 +2,11 @@ import os
 import shutil
 import json
 import runpy
-import drivers
+from rome import drivers
 
 
 def new(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -26,7 +26,7 @@ def new(name):
 
 
 def delete(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -36,14 +36,14 @@ def delete(name):
 
 def list():
     scripts = []
-    for f in os.listdir(os.path.dirname(__file__)):
-        if os.path.exists(os.path.join(os.path.dirname(__file__), f, 'data.json')):
+    for f in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+        if os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), f, 'data.json')):
             scripts.append(f)
     return scripts
 
 
 def load(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -56,7 +56,7 @@ def load(name):
 
 
 def save(name, data):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -69,7 +69,7 @@ def save(name, data):
 
 
 def run(name, driver='sim'):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError

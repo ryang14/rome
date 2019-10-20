@@ -5,7 +5,7 @@ import runpy
 
 
 def new(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -26,7 +26,7 @@ def new(name):
 
 def delete(name):
     if not name == 'sim':  # Don't delete the simulator
-        path = os.path.join(os.path.dirname(__file__), name)
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
         if os.path.realpath(path) != path:
             raise FileNotFoundError
@@ -36,14 +36,14 @@ def delete(name):
 
 def list():
     drivers = []
-    for f in os.listdir(os.path.dirname(__file__)):
-        if os.path.exists(os.path.join(os.path.dirname(__file__), f, 'parameters.json')):
+    for f in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+        if os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), f, 'parameters.json')):
             drivers.append(f)
     return drivers
 
 
 def load(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -56,7 +56,7 @@ def load(name):
 
 
 def save(name, parameters):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
@@ -69,7 +69,7 @@ def save(name, parameters):
 
 
 def run(name):
-    path = os.path.join(os.path.dirname(__file__), name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
         raise FileNotFoundError
