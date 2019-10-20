@@ -118,13 +118,29 @@ def browse():
         return '', status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-@app.route('/browser/<path:urlFilePath>')
+@app.route('/browser/<path:urlFilePath>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def browser(urlFilePath):
-    try:
-        path = os.path.join(os.path.dirname(__file__), urlFilePath)
+    path = os.path.join(os.path.dirname(__file__), urlFilePath)
+    if os.path.realpath(path) != path:
+        return '', status.HTTP_500_INTERNAL_SERVER_ERROR
 
-        if os.path.realpath(path) != path:
-            return '', status.HTTP_500_INTERNAL_SERVER_ERROR
+    try:
+        if request.method == 'POST':
+            open(path, 'w')
+
+        if request.method == 'PUT':
+            if os.path.isfile(path):
+                contents = request.data.get('contents')
+
+                with open(path, 'w') as f:
+                    f.write(contents)
+                    return {'type': 'file', 'contents': f.read()}
+
+        if request.method == 'DELETE':
+            if os.path.isfile(path):
+                os.remove(path)
+            
+            return '', status.HTTP_204_NO_CONTENT
 
         if os.path.isfile(path):
             with open(path, 'r') as f:
