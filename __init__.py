@@ -1,11 +1,11 @@
 import os
-from flask import request, url_for
+from flask import request, url_for, redirect
 from flask_api import FlaskAPI, status, exceptions
 from flask_cors import CORS
 from rome import scripts
 from rome import drivers
 
-app = FlaskAPI(__name__)
+app = FlaskAPI(__name__, static_url_path='')
 
 # Enable CORS so we can run the fromt end dev server separately
 CORS(app, resources={r'/*': {'origins': '*'}})
@@ -153,7 +153,17 @@ def browser(urlFilePath):
         return '', status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
+@app.route('/static/<path:urlFilePath>', methods=['GET'])
+def serve_static(urlFilePath):
+    return app.send_static_file(urlFilePath)
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+
 def main():
     from gevent.pywsgi import WSGIServer
-    http_server = WSGIServer(('', 5000), app)
+    http_server = WSGIServer(('', 3000), app)
     http_server.serve_forever()
