@@ -1,4 +1,4 @@
-from arm import Arm, Point, Pointj
+from rome.drivers.arm import Arm, Point, Pointj
 
 class Sim(Arm):
     def __init__(self,**kwargs):

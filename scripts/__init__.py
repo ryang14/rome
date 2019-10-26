@@ -2,7 +2,6 @@ import os
 import shutil
 import json
 import runpy
-from rome import drivers
 
 
 def new(name):
@@ -68,7 +67,7 @@ def save(name, data):
         raise
 
 
-def run(name, driver='sim'):
+def run(name, driver):
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     if os.path.realpath(path) != path:
@@ -78,7 +77,6 @@ def run(name, driver='sim'):
     try:
         with open(os.path.join(path, 'data.json'), 'r') as f:
             script_globals.update(json.load(f)['data'])
-        driver = drivers.run(driver)
         script_globals.update(driver)
         runpy.run_path(path, init_globals=script_globals)
     except:

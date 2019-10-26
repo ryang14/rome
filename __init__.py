@@ -11,7 +11,7 @@ app = FlaskAPI(__name__, static_url_path='')
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 # Driver to use
-driver = 'sim'
+driver = {}
 
 
 def script_repr(name):
@@ -99,7 +99,7 @@ def drivers_detail(name):
 @app.route("/drivers/<string:name>/select", methods=['GET'])
 def drivers_select(name):
     global driver
-    driver = name
+    driver = drivers.run(name)
     return driver_repr(name)
 
 
@@ -153,17 +153,10 @@ def browser(urlFilePath):
         return '', status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-@app.route('/static/<path:urlFilePath>', methods=['GET'])
-def serve_static(urlFilePath):
-    return app.send_static_file(urlFilePath)
-
-
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
 
 
 def main():
-    from gevent.pywsgi import WSGIServer
-    http_server = WSGIServer(('', 3000), app)
-    http_server.serve_forever()
+    app.run(debug=True)
