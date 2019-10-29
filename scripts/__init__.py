@@ -2,7 +2,9 @@ import os
 import shutil
 import json
 import runpy
+import multiprocessing
 
+scriptThread = None
 
 def new(name):
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
@@ -74,10 +76,14 @@ def run(name, driver):
         raise FileNotFoundError
 
     script_globals = {}
-    try:
-        with open(os.path.join(path, 'data.json'), 'r') as f:
-            script_globals.update(json.load(f)['data'])
-        script_globals.update(driver)
-        runpy.run_path(path, init_globals=script_globals)
-    except:
-        raise
+    with open(os.path.join(path, 'data.json'), 'r') as f:
+        script_globals.update(json.load(f)['data'])
+    script_globals.update(driver)
+    global scriptThread
+    if(scriptThread == None or not scriptThread.is_alive()):
+        scriptThread = multiprocessing.Process(target=runpy.run_path, args=(path, script_globals))
+    scriptThread.start()
+
+def stop():
+    global scriptThread
+    scriptThread.terminate()

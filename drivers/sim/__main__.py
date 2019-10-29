@@ -3,6 +3,7 @@ from rome.drivers.arm import Arm, Point, Pointj
 class Sim(Arm):
     def __init__(self,**kwargs):
         super(Sim,self).__init__(**kwargs)
+        self.name = 'sim'
         self._joints = Pointj()
 
     def _move_to(self, pointj):

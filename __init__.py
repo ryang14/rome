@@ -35,6 +35,12 @@ def scripts_list():
     return [script_repr(name) for name in sorted(scripts.list())]
 
 
+@app.route("/scripts/stop", methods=['GET', 'POST'])
+def scripts_stop():
+    scripts.stop()
+    return ''
+
+
 @app.route("/scripts/<string:name>/", methods=['GET', 'PUT', 'DELETE'])
 def scripts_detail(name):
     if request.method == 'PUT':
@@ -55,6 +61,7 @@ def scripts_run(name):
     try:
         scripts.run(name, driver)
     except:
+        raise
         return '', status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         return script_repr(name)
@@ -151,6 +158,14 @@ def browser(urlFilePath):
 
     except:
         return '', status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+@app.route('/status')
+def app_status():
+    return {
+        'driver': '' if driver == {} else driver.name,
+        'script': '' if scripts.scriptThread == None or not scripts.scriptThread.is_alive() else 'script'
+    }
 
 
 @app.route('/')

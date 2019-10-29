@@ -22,6 +22,7 @@ class Pointj:
 # Generic arm class implments a standard API
 class Arm(metaclass=ABCMeta):
     def __init__(self,**kwargs):
+        self.name = 'generic'
         pass
 
     # Get the current position as a point
