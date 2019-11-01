@@ -3,8 +3,9 @@ import shutil
 import json
 import runpy
 import multiprocessing
+import signal
 
-scriptThread = None
+scriptProc = None
 
 def new(name):
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
@@ -79,11 +80,13 @@ def run(name, driver):
     with open(os.path.join(path, 'data.json'), 'r') as f:
         script_globals.update(json.load(f)['data'])
     script_globals.update(driver)
-    global scriptThread
-    if(scriptThread == None or not scriptThread.is_alive()):
-        scriptThread = multiprocessing.Process(target=runpy.run_path, args=(path, script_globals))
-    scriptThread.start()
+    global scriptProc
+    # Only run the script if one is not running
+    if(scriptProc == None or not scriptProc.is_alive()):
+        scriptProc = multiprocessing.Process(target=runpy.run_path, args=(path, script_globals))
+        scriptProc.start()
 
 def stop():
-    global scriptThread
-    scriptThread.terminate()
+    global scriptProc
+    os.kill(scriptProc.pid, signal.SIGINT) # scriptProc.terminate() doesn't work with gunicorn
+    scriptProc.join()
