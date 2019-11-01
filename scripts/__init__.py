@@ -83,7 +83,7 @@ def run(name, driver):
     global scriptProc
     # Only run the script if one is not running
     if(scriptProc == None or not scriptProc.is_alive()):
-        scriptProc = multiprocessing.Process(target=runpy.run_path, args=(path, script_globals))
+        scriptProc = multiprocessing.Process(name = name, target=runpy.run_path, args=(path, script_globals))
         scriptProc.start()
 
 def stop():

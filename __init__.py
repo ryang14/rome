@@ -163,8 +163,8 @@ def browser(urlFilePath):
 @app.route('/status')
 def app_status():
     return {
-        'driver': '' if driver == {} else driver.name,
-        'script': '' if scripts.scriptThread == None or not scripts.scriptThread.is_alive() else 'script'
+        'driver': '' if not 'arm' in driver else driver['arm'].name,
+        'script': '' if scripts.scriptProc == None or not scripts.scriptProc.is_alive() else scripts.scriptProc.name
     }
 
 
